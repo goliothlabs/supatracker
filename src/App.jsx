@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Loader } from "@googlemaps/js-api-loader";
+import './App.css'
 
 const supabase = createClient(
   "PROJECT_URL",
@@ -68,7 +69,7 @@ function App() {
       const { data, error } = await supabase
         .from("locations")
         .select()
-        .gte("timestamp", timeThreshold);
+        .gte("created_at", timeThreshold);
       if (error) throw error;
 
       if (data.length === 0) {
@@ -118,18 +119,57 @@ function App() {
   };
 
   return (
-    <div>
-      <div style={{ margin: "10px" }}>
-        <label htmlFor="timeRange">Show locations from the last: </label>
-        <select id="timeRange" onChange={handleTimeRangeChange} value={selectedTimeRange}>
-          {timeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div ref={mapRef} style={{ width: "100vw", height: "90vh" }}></div>
+    <div className="app">
+      {/* Header */}
+      <header className="app-header">
+        <div className="logo">
+          <img src="/golioth-logo.svg" alt="Golioth Logo" className="logo-img" />
+          <h1>Golioth Location Service</h1>
+        </div>
+        <p className="tagline">Experience seamless IoT location tracking with Golioth</p>
+      </header>
+
+      {/* Main Content */}
+      <main className="app-content">
+        <div className="container-fluid p-3">
+        <p className="description">
+          The Golioth Location Service enables real-time tracking and visualization of IoT devices.
+          With easy-to-use tools and seamless integration, monitor your devices' location history and analyze movement patterns.
+          <br /><br />
+          Below is a demo we built to show off at CES. Select a time range and explore the possibilities of precise location data.
+        </p>
+          <div className="mb-3">
+            <label htmlFor="timeRange" className="form-label">
+              Show locations from the last:
+            </label>
+            <select
+              id="timeRange"
+              className="form-select"
+              onChange={handleTimeRangeChange}
+              value={selectedTimeRange}
+            >
+              {timeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div ref={mapRef} className="w-100" style={{ height: "90vh" }}></div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="app-footer">
+        <div className="footer-content">
+          <p>
+            Powered by <a href="https://golioth.io" target="_blank" rel="noopener noreferrer">Golioth</a>.
+            <br />
+            <br />
+            Learn more about the <a href="https://blog.golioth.io/golioth-location-private-access/" target="_blank" rel="noopener noreferrer">Location Service</a> on our blog.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
